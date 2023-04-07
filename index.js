@@ -29,16 +29,12 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 })
 
 const postSchema = new mongoose.Schema({
-    // id: Number,
+    id: Number,
     title: String,
     body: String
 })
 
 const Post = new mongoose.model("Post", postSchema);
-
-app.get("/", (req, res) => {
-    res.send("API is working...")
-})
 
 app.get("/posts", async (req, res) => {
     // res.send("Redux Blog App API")
