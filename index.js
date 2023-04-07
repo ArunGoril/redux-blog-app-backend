@@ -1,32 +1,35 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config()
 
 const app = express();
+const PORT = process.env.PORT || 9000
 
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 
-const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-    autoIndex: false, // Don't build indexes
-    maxPoolSize: 10, // Maintain up to 10 socket connections
-    serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-    socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-    family: 4 // Use IPv4, skip trying IPv6
-}
+// const options = {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     serverSelectionTimeoutMS: 5000,
+//     autoIndex: false, // Don't build indexes
+//     maxPoolSize: 10, // Maintain up to 10 socket connections
+//     serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+//     socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+//     family: 4 // Use IPv4, skip trying IPv6
+// }
 
-mongoose.connect("mongodb://localhost:27017/reduxBlogAppDB", options).then(() => {
+mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log("Database Connected")
 }).catch(err => {
     console.log("Err Occurred")
 })
 
 const postSchema = new mongoose.Schema({
-    id: Number,
+    // id: Number,
     title: String,
     body: String
 })
@@ -92,6 +95,6 @@ app.delete("/posts/:id", async (req, res) => {
     }
 })
 
-app.listen(9000, () => {
-    console.log("Server is running at port 9000...")
+app.listen(PORT, () => {
+    console.log("Server is running at port " + PORT + "...")
 })
